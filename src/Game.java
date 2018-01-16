@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-public class Game extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener, Runnable {
     private JButton[][] Buttons;
     private Mines game;
     private Menu main_menu;
@@ -16,8 +16,8 @@ public class Game extends JFrame implements ActionListener {
         mines_number=minesnumber;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-        setSize(500,500);
-        setLocation(600,300);
+        setSize(size*50,size*50);
+        setLocation(600-(size+200),300-(size+200));
         setLayout(new GridLayout(size,size,0,0));
         Buttons = new JButton[size][size];
         for(int i=0; i<size; i++)
@@ -85,5 +85,8 @@ public class Game extends JFrame implements ActionListener {
                 }
             }
         }
+    }
+    public void run(){
+
     }
 }

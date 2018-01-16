@@ -25,7 +25,7 @@ public class ButtonPanel extends JPanel implements ActionListener{
         parametersButton.addActionListener(this);
         exitButton.addActionListener(this);
 
-        setLayout(new FlowLayout());
+        setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         add(gameButton);
         add(parametersButton);
