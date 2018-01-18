@@ -4,13 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Parameters extends JFrame implements ActionListener {
-    private int x,minesnumber;
+    private int x,minesnumber,game_time;
     private JComboBox levels;
     private JButton save;
     private ButtonPanel parent;
-    private JCheckBox check;
+    private JCheckBox check,check_time;
     private JLabel text1;
-    private JTextField text_size,text_mines;
+    private JTextField text_size,text_mines,text_time;
     public Parameters(ButtonPanel p){
         super("Ustawienia");
         parent=p;
@@ -51,9 +51,20 @@ public class Parameters extends JFrame implements ActionListener {
         text_size.setPreferredSize(new Dimension(60,20));
         text_mines.setPreferredSize(new Dimension(60,20));
 
+        check_time = new JCheckBox("Gra na czas");
+        check_time.addActionListener(this);
+        c.gridy=7;
+        add(check_time,c);
+
+        text_time = new JTextField("Czas");
+        text_time.setEnabled(false);
+        add(text_time,c);
+
+        game_time=0;
+
         save=new JButton("Zapisz");
         save.addActionListener(this);
-        c.gridy=7;
+        c.gridy=8;
         add(save,c);
     }
     public int getsize(){
@@ -61,6 +72,9 @@ public class Parameters extends JFrame implements ActionListener {
     }
     public int getMines(){
         return minesnumber;
+    }
+    public int getTime(){
+        return game_time;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -83,14 +97,14 @@ public class Parameters extends JFrame implements ActionListener {
             if(check.isSelected()){
                 x=Integer.parseInt(text_size.getText());
                 minesnumber=Integer.parseInt(text_mines.getText());
+
+            }
+            if(check_time.isSelected()){
+                game_time=Integer.parseInt(text_time.getText());
+                parent.settime(this);
             }
             parent.setparams(this);
-        }
-        if(source==check){
-            text_size.setEnabled(true);
-            text_mines.setEnabled(true);
-            text_size.setText("");
-            text_mines.setText("");
+            this.dispose();
         }
         if(source==check){
             if(!check.isSelected()){
@@ -98,6 +112,22 @@ public class Parameters extends JFrame implements ActionListener {
                 text_mines.setEnabled(false);
                 text_size.setText("Rozmiar");
                 text_mines.setText("Miny");
+            }
+            else{
+                text_size.setEnabled(true);
+                text_mines.setEnabled(true);
+                text_size.setText("");
+                text_mines.setText("");
+            }
+        }
+        if(source==check_time){
+            if(!check_time.isSelected()){
+                text_time.setEnabled(false);
+                text_time.setText("Czas");
+            }
+            else{
+                text_time.setEnabled(true);
+                text_time.setText("");
             }
         }
     }

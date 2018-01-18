@@ -12,9 +12,9 @@ public class ButtonPanel extends JPanel implements ActionListener{
     private JButton gameButton;
     private JButton parametersButton;
     private JButton exitButton;
-    private int size,mines_number;
+    private int size,mines_number,game_time;
+    private Game game;
     Menu menu_parent;
-
     public ButtonPanel(Menu parent) {
         menu_parent=parent;
         gameButton = new JButton("Nowa gra");
@@ -37,6 +37,10 @@ public class ButtonPanel extends JPanel implements ActionListener{
     public void setparams(Parameters parameters_window){
         size=parameters_window.getsize();
         mines_number=parameters_window.getMines();
+
+    }
+    public void settime(Parameters parameters_window){
+        game_time=parameters_window.getTime();
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ButtonPanel extends JPanel implements ActionListener{
         Object source = e.getSource();
 
         if(source == gameButton) {
-            Game game_window = new Game(menu_parent,size,mines_number);
+            game = new Game(menu_parent,size,mines_number,game_time);
             menu_parent.setVisible(false);
         }
 
