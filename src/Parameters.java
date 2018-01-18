@@ -8,7 +8,7 @@ public class Parameters extends JFrame implements ActionListener {
     private JComboBox levels;
     private JButton save;
     private ButtonPanel parent;
-    private JCheckBox check,check_time;
+    public JCheckBox check,check_time;
     private JLabel text1;
     private JTextField text_size,text_mines,text_time;
     public Parameters(ButtonPanel p){
@@ -93,16 +93,19 @@ public class Parameters extends JFrame implements ActionListener {
                 }
             }
         }
+        else {
+            x=8; minesnumber=10;
+        }
         if(source==save){
             if(check.isSelected()){
                 x=Integer.parseInt(text_size.getText());
                 minesnumber=Integer.parseInt(text_mines.getText());
-
             }
             if(check_time.isSelected()){
                 game_time=Integer.parseInt(text_time.getText());
                 parent.settime(this);
             }
+            else game_time=0;
             parent.setparams(this);
             this.dispose();
         }
@@ -110,8 +113,6 @@ public class Parameters extends JFrame implements ActionListener {
             if(!check.isSelected()){
                 text_size.setEnabled(false);
                 text_mines.setEnabled(false);
-                text_size.setText("Rozmiar");
-                text_mines.setText("Miny");
             }
             else{
                 text_size.setEnabled(true);
@@ -123,7 +124,6 @@ public class Parameters extends JFrame implements ActionListener {
         if(source==check_time){
             if(!check_time.isSelected()){
                 text_time.setEnabled(false);
-                text_time.setText("Czas");
             }
             else{
                 text_time.setEnabled(true);

@@ -2,8 +2,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class ButtonPanel extends JPanel implements ActionListener{
 
@@ -12,8 +11,12 @@ public class ButtonPanel extends JPanel implements ActionListener{
     private JButton gameButton;
     private JButton parametersButton;
     private JButton exitButton;
-    private int size,mines_number,game_time;
+    private int size,mines_number,game_time,z;
+    private Time time;
     private Game game;
+    boolean run;
+    private Component parentComponent;
+    private Parameters parameters_window;
     Menu menu_parent;
     public ButtonPanel(Menu parent) {
         menu_parent=parent;
@@ -33,6 +36,9 @@ public class ButtonPanel extends JPanel implements ActionListener{
 
         size=8;
         mines_number=10;
+        run=true;
+        time = new Time();
+        z=0;
     }
     public void setparams(Parameters parameters_window){
         size=parameters_window.getsize();
@@ -48,12 +54,42 @@ public class ButtonPanel extends JPanel implements ActionListener{
         Object source = e.getSource();
 
         if(source == gameButton) {
-            game = new Game(menu_parent,size,mines_number,game_time);
+            new Thread(new Runnable(){
+                public void run(){
+                    run=true;
+                    z=0;
+                    Thread thisThread = java.lang.Thread.currentThread();
+                    while(run) {
+                        int finalZ = z;
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                time.setText(Integer.toString(finalZ));
+                            }
+                        });
+                        try {
+                            java.lang.Thread.sleep(1000);
+                        } catch (Exception e) {
+                        }
+                        z++;
+                        if(game_time>0) {
+                            if (z == game_time+1) {
+                                JOptionPane.showMessageDialog(parentComponent, "Koniec czasu :/");
+                                run = false;
+                                game.BackToMenu();
+                                thisThread.interrupt();
+                            }
+                        }
+                        if(thisThread.isInterrupted()) return;
+                    }
+                }
+            }).start();
+
+            game = new Game(menu_parent,size,mines_number,game_time,time,this);
             menu_parent.setVisible(false);
         }
 
         else if(source == parametersButton) {
-            Parameters parameters_window = new Parameters(this);
+            parameters_window = new Parameters(this);
         }
         else if(source == exitButton)
             System.exit(0);

@@ -12,13 +12,16 @@ public class Game extends JFrame implements ActionListener{
     private Time time;
     private int size,mines_number,game_time,z;
     private Component parentComponent;
+    private ButtonPanel parent;
     private boolean run;
-    public Game(Menu menu,int x, int minesnumber,int game_t){
+    public Game(Menu menu,int x, int minesnumber,int game_t,Time time_t,ButtonPanel parent_t){
         super("Saper");
         main_menu=menu;
         size=x;
         mines_number=minesnumber;
         game_time=game_t;
+        time=time_t;
+        parent=parent_t;
         z=0;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -44,7 +47,6 @@ public class Game extends JFrame implements ActionListener{
         gamepanel = new GamePanel(this,main_menu);
         add(gamepanel,c);
 
-        time = new Time();
         c.gridy++;
         c.gridx=size-1;
         c.weightx=0.5;
@@ -85,7 +87,7 @@ public class Game extends JFrame implements ActionListener{
                 if(Buttons[i][j].isEnabled()) temp++;
         return temp;
     }
-    private void BackToMenu(){
+    public void BackToMenu(){
         this.dispose();
         main_menu.setVisible(true);
     }
@@ -93,33 +95,6 @@ public class Game extends JFrame implements ActionListener{
         @Override
     public void actionPerformed(ActionEvent e){
         Object source = e.getSource();
-
-        new Thread(new Runnable(){
-            public void run(){
-                Thread thisThread = java.lang.Thread.currentThread();
-                while(run) {
-                    int finalZ = z;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            time.setText(Integer.toString(finalZ));
-                        }
-                    });
-                    try {
-                        java.lang.Thread.sleep(1000);
-                    } catch (Exception e) {
-                    }
-                    z++;
-                    if(game_time>0) {
-                        if (z == game_time+1) {
-                            thisThread.interrupt();
-                            JOptionPane.showMessageDialog(parentComponent, "Koniec czasu :/");
-                            run = false;
-                            BackToMenu();
-                        }
-                    }
-                }
-            }
-        }).start();
 
         for(int i=0; i<size; i++) {
             for(int j=0; j<size; j++)
@@ -129,14 +104,14 @@ public class Game extends JFrame implements ActionListener{
                     for(int x=0; x<size; x++)
                         for(int y=0; y<size; y++)
                             ShowButtonField(Buttons[x][y],x,y);
-                    run=false;
+                    parent.run=false;
                     JOptionPane.showMessageDialog(super.rootPane,"Przegrałeś :/");
                     BackToMenu();
                 }
                 else{
                     ShowFields(i,j);
                     if(EnabledButtons()==mines_number) {
-                        run=false;
+                        parent.run=false;
                         JOptionPane.showMessageDialog(super.rootPane,"Znalazłeś wszystkie miny :D");
                         BackToMenu();
                     }
