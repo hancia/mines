@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -61,10 +62,21 @@ public class Game extends JFrame implements ActionListener{
     }
     private void ShowButtonField(JButton button,int i, int j){
         button.setEnabled(false);
-        if(game.mines[i][j]!=0)
-            button.setText(Integer.toString(game.mines[i][j]));
-        else
-            button.setText(" ");
+        if(game.mines[i][j]==-1){
+            try {
+                Image img = ImageIO.read(getClass().getResource("mine.png"));
+                img = img.getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+                button.setIcon(new ImageIcon(img));
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+        else {
+            if (game.mines[i][j] != 0)
+                button.setText(Integer.toString(game.mines[i][j]));
+            else
+                button.setText(" ");
+        }
     }
     private void ShowFields(int x, int y){
         if(game.mines[x][y]==0) {
